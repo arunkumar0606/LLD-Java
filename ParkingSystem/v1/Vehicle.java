@@ -18,4 +18,11 @@ public class Vehicle {
     public void setVehicle(VehicleType vehicle) {
         this.vehicle = vehicle;
     }
+
+    @Override
+    public String toString() {
+        return "{ "+registrationNumber + vehicle +" }";
+    }
+
+
 }

@@ -8,23 +8,24 @@ public class ParkingSpot {
         return spotNo;
     }
 
-    public void setSpotNo(int spotNo) {
-        this.spotNo = spotNo;
-    }
-
     public Vehicle getVehicle() {
         return vehicle;
-    }
-
-    public void setVehicle(Vehicle vehicle) {
-        this.vehicle = vehicle;
     }
 
     public boolean isOccupied() {
         return isOccupied;
     }
 
-    public void setOccupied(boolean occupied) {
-        isOccupied = occupied;
+    public void clearVehicle(){
+        vehicle = null;
+        isOccupied=false;
+        spotNo=0;
+    }
+
+    public void parkVehicle(Vehicle v, int spotNo){
+        isOccupied= true;
+        vehicle = v;
+        this.spotNo =spotNo;
+
     }
 }
