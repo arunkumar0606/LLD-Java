@@ -3,29 +3,25 @@
 public class Customer {
     public static void main(String[] args) {
 
-        ParkingLot lot = new ParkingLot("Phoenix",5);
+        ParkingLot lot = new ParkingLot("Phoenix", 2, 2, 1);
 
-
-        Vehicle bike = new Vehicle("234",VehicleType.BIKE);
-        Vehicle car = new Vehicle("444",VehicleType.CAR);
+        Vehicle bike = new Vehicle("234", VehicleType.BIKE);
+        Vehicle car = new Vehicle("444", VehicleType.CAR);
         Vehicle truck = new Vehicle("6666", VehicleType.TRUCK);
-        Vehicle bike2 = new Vehicle("2234",VehicleType.BIKE);
-        Vehicle bike3 = new Vehicle("5234",VehicleType.BIKE);
-        Vehicle bike4 = new Vehicle("f5234",VehicleType.BIKE);
+        Vehicle bike2 = new Vehicle("2234", VehicleType.BIKE);
+        Vehicle bike3 = new Vehicle("5234", VehicleType.BIKE);
 
-        lot.park(bike,1);
-        lot.park(car,2);
-        lot.park(truck,3);
-        lot.park(bike2,4);
-        lot.park(bike3,5);
-        lot.park(bike4,6);
+        lot.park(bike);
+        lot.park(car);
+        lot.park(truck);
+        lot.park(bike2);
+        lot.park(bike3); // should fail (bike spots full)
 
+        lot.unpark("444");
 
-        lot.unPark(car);
+        lot.park(new Vehicle("999", VehicleType.CAR));
 
-        lot.park(car,2);
-
-        System.out.println(lot.parkedVehicles());
+        System.out.println(lot.getParkedVehicles());
 
 
     }

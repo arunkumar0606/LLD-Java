@@ -1,56 +1,70 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ParkingLot {
-    private String name;
-    private List<ParkingSpot> slots;
-    private final int maxSlots;
+    private final String name;
+    private final List<ParkingSpot> spots;
+    private final Map<String, ParkingSpot> vehicleMap; // O(1) lookup
 
-    public ParkingLot(String name , int maxSlots){
-        this.name=name;
-        this.maxSlots=maxSlots;
-        slots= new ArrayList<>();
+    public ParkingLot(String name, int bikeSpots, int carSpots, int truckSpots) {
+        this.name = name;
+        this.spots = new ArrayList<>();
+        this.vehicleMap = new HashMap<>();
+
+        int spotNo = 1;
+
+        // Pre-create spots
+        for (int i = 0; i < bikeSpots; i++)
+            spots.add(new ParkingSpot(spotNo++, VehicleType.BIKE));
+
+        for (int i = 0; i < carSpots; i++)
+            spots.add(new ParkingSpot(spotNo++, VehicleType.CAR));
+
+        for (int i = 0; i < truckSpots; i++)
+            spots.add(new ParkingSpot(spotNo++, VehicleType.TRUCK));
     }
 
-    public String getName() {
-        return name;
-    }
-
-
-    public void park(Vehicle v , int slot){
-        if(slots.size() == maxSlots){
-            System.out.println("Spots are full , please wait !");
+    public void park(Vehicle v) {
+        if (vehicleMap.containsKey(v.getRegistrationNumber())) {
+            System.out.println("Vehicle already parked!");
             return;
         }
-        for (ParkingSpot spot : slots){
-            if(spot.getSpotNo() == slot){
-                System.out.println("Spot already occupied , try different spot !");
+
+        for (ParkingSpot spot : spots) {
+            if (spot.isAvailable() && spot.canFit(v)) {
+                spot.park(v);
+                vehicleMap.put(v.getRegistrationNumber(), spot);
+                System.out.println("Parked " + v.getRegistrationNumber() + " at Spot " + spot.getSpotNo());
                 return;
             }
         }
-        ParkingSpot spot = new ParkingSpot();
-        spot.parkVehicle(v,slot);
-        slots.add(spot);
-        System.out.println( "Parked Vehicle "+v.getRegistrationNumber()+" @Spot :"+spot.getSpotNo());
+
+        System.out.println("No available spot for vehicle type: " + v.getType());
     }
-    public void unPark(Vehicle v ){
 
-        for(ParkingSpot spot : slots){
-            if(spot.getVehicle().getRegistrationNumber() == v.getRegistrationNumber()){
-                System.out.println( "Unparked Succesfully @ Spot : "+spot.getSpotNo());
-                slots.remove(spot);
-                spot.clearVehicle();
-                return;
-            }
+    public void unpark(String registrationNumber) {
+        ParkingSpot spot = vehicleMap.get(registrationNumber);
 
+        if (spot == null) {
+            System.out.println("Vehicle not found!");
+            return;
         }
-        System.out.println( "Vehicle not Found !!");
 
-    }
-    public List<Vehicle> parkedVehicles(){
-        List<Vehicle> v = new ArrayList<>();
-        slots.forEach( x-> v.add(x.getVehicle()));
-        return v;
+        spot.unpark();
+        vehicleMap.remove(registrationNumber);
+
+        System.out.println("Unparked vehicle from Spot " + spot.getSpotNo());
     }
 
+    public List<Vehicle> getParkedVehicles() {
+        List<Vehicle> result = new ArrayList<>();
+        for (ParkingSpot spot : spots) {
+            if (!spot.isAvailable()) {
+                result.add(spot.getVehicle());
+            }
+        }
+        return result;
+    }
 }

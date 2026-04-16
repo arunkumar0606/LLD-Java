@@ -1,8 +1,28 @@
 public class ParkingSpot {
-
-    private int spotNo;
+    private final int spotNo;
+    private final VehicleType supportedType;
     private Vehicle vehicle;
-    private boolean isOccupied;
+
+    public ParkingSpot(int spotNo, VehicleType type) {
+        this.spotNo = spotNo;
+        this.supportedType = type;
+    }
+
+    public boolean isAvailable() {
+        return vehicle == null;
+    }
+
+    public boolean canFit(Vehicle v) {
+        return v.getType() == supportedType;
+    }
+
+    public void park(Vehicle v) {
+        this.vehicle = v;
+    }
+
+    public void unpark() {
+        this.vehicle = null;
+    }
 
     public int getSpotNo() {
         return spotNo;
@@ -12,20 +32,7 @@ public class ParkingSpot {
         return vehicle;
     }
 
-    public boolean isOccupied() {
-        return isOccupied;
-    }
-
-    public void clearVehicle(){
-        vehicle = null;
-        isOccupied=false;
-        spotNo=0;
-    }
-
-    public void parkVehicle(Vehicle v, int spotNo){
-        isOccupied= true;
-        vehicle = v;
-        this.spotNo =spotNo;
-
+    public VehicleType getSupportedType() {
+        return supportedType;
     }
 }
